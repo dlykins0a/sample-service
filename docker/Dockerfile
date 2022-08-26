@@ -24,5 +24,5 @@ RUN mvn package -Dmaven.test.skip=true
 FROM openjdk:11-jdk
 COPY --from=0 /build/target/sample-service-1.2-SNAPSHOT.jar /app/target/sample-service-1.2-SNAPSHOT.jar
 
-EXPOSE 9000
+EXPOSE 80
 ENTRYPOINT [ "java", "-jar", "/app/target/sample-service-1.2-SNAPSHOT.jar", "--server.port=9000" ]
