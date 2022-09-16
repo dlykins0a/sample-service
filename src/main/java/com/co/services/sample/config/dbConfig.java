@@ -1,4 +1,4 @@
-package com.co.services.sample;
+package com.co.services.sample.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
