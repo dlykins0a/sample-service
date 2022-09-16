@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
 import javax.sql.DataSource;
 
 @Configuration
-public class Config {6
+public class Config {
 
     @Autowired
     private Environment environment;
