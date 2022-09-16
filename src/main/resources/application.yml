@@ -8,3 +8,4 @@ environment:
    dbport: ${DBPORT}
    username: ${USERNAME}
    password: ${PASSWORD}
+   dbname: ${DBNAME}
