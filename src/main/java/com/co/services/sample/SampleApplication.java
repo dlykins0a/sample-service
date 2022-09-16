@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SampleApplication {
 
 	public static void main(String[] args) {
-		System.out.println(String.format("The current shell is: %s.", System.getenv("DBNAME")))
 		SpringApplication.run(SampleApplication.class, args);
 	}
 	
