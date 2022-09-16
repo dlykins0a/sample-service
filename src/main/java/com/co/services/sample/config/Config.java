@@ -19,11 +19,11 @@ public class Config {
   
     private final Logger log = LoggerFactory.getLogger(Config.class);
 
-    String serverName = "donssqlv1.database.usgovcloudapi.net";
-    String port = "1433";
-    String databaseName = "MCSSQL-POCV1";
-    String userName = "donssqllogin";
-    String password = "dlykins0A";
+    String serverName = environment.getProperty("environment.servername")
+    String port = environment.getProperty("environment.dbport")
+    String databaseName = environment.getProperty("environment.dbname")
+    String userName = environment.getProperty("environment.username")
+    String password = environment.getProperty("environment.password")
 
     // MS SQL Datasource
     @Primary
@@ -31,6 +31,8 @@ public class Config {
     public DataSource mainDataSource() {
         String envSample = environment.getProperty("environment.username");
         System.out.println("logging env var from yml" + envSample);
+        log.info("********************************* logging env var from yml");
+        log.info(envSample);
         log.info("********************************* Creating mainDataSource");
         HikariConfig config = new HikariConfig();
 
