@@ -38,10 +38,10 @@ public class Config {
         HikariConfig config = new HikariConfig();
 
         config.setDataSourceClassName("com.microsoft.sqlserver.jdbc.SQLServerDataSource");
-        String url = "jdbc:microsoft:sqlserver://" + serverName + ":" + port + "?useServerPrepStmts=false&rewriteBatchedStatements=true&jdbcCompliantTruncation=false";
+        String url = "jdbc:microsoft:sqlserver://" + serverName + "?useServerPrepStmts=false&rewriteBatchedStatements=true&jdbcCompliantTruncation=false";
         config.setJdbcUrl(url);
         config.addDataSourceProperty("serverName", serverName);
-        config.addDataSourceProperty("portNumber", port);
+//         config.addDataSourceProperty("portNumber", port);
         config.addDataSourceProperty("databaseName", databaseName);
 
         config.setUsername(userName);
