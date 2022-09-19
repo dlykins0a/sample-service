@@ -9,9 +9,16 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.env.Environment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 public class SampleController {
+     @Autowired
+    private Environment environment;
+  
+    private final Logger log = LoggerFactory.getLogger(SampleController.class);
     MathContext m = new MathContext(5);
     
     private BigDecimal initValue(Double val) {
@@ -20,6 +27,9 @@ public class SampleController {
     
     @GetMapping("/")
     public String sampleApi() {
+        String envSample = environment.getProperty("environment.username");
+        log.info("********************************* logging env var from yml");
+        log.info(envSample);
         Map<Integer, ArrayList<BigDecimal>> sqlResults = new HashMap<Integer, ArrayList<BigDecimal>>();
 
         sqlResults.put(1,  new ArrayList<BigDecimal>(Arrays.asList(
