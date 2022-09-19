@@ -6,32 +6,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
 
 @Configuration
 public class Config {
+     @Autowired
+    private Environment environment;
 
     private final Logger log = LoggerFactory.getLogger(Config.class);
 
-    /*
      String serverName = environment.getProperty("environment.servername");
      String port = environment.getProperty("environment.dbport");
      String databaseName = environment.getProperty("environment.dbname");
      String userName = environment.getProperty("environment.username");
      String password = environment.getProperty("environment.password");
-     */
+     
 
-    String serverName = "azuresql-server-566252580.database.usgovcloudapi.net";
-    String port = "1433";
-    String databaseName = "NEXT_GEN_DB";
-    String userName = "azureuser";
-    String password = "Password!";
+//     String serverName = "azuresql-server-566252580.database.usgovcloudapi.net";
+//     String port = "1433";
+//     String databaseName = "NEXT_GEN_DB";
+//     String userName = "azureuser";
+//     String password = "Password!";
 
     // MS SQL Datasource
     @Primary
     @Bean("mainDataSource")
     public DataSource mainDataSource() {
+         String envSample = environment.getProperty("environment.username");
+        log.info("********************************* logging env var from yml");
+        log.info(envSample);
         log.info("********************************* Creating mainDataSource");
         HikariConfig config = new HikariConfig();
 
