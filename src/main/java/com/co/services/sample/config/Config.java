@@ -20,11 +20,6 @@ public class Config {
 
      
 
-//     String serverName = "azuresql-server-566252580.database.usgovcloudapi.net";
-//     String port = "1433";
-//     String databaseName = "NEXT_GEN_DB";
-//     String userName = "azureuser";
-//     String password = "Password!";
 
     // MS SQL Datasource
     @Primary
