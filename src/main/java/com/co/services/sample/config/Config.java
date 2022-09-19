@@ -18,11 +18,6 @@ public class Config {
 
     private final Logger log = LoggerFactory.getLogger(Config.class);
 
-     String serverName = environment.getProperty("environment.servername");
-     String port = environment.getProperty("environment.dbport");
-     String databaseName = environment.getProperty("environment.dbname");
-     String userName = environment.getProperty("environment.username");
-     String password = environment.getProperty("environment.password");
      
 
 //     String serverName = "azuresql-server-566252580.database.usgovcloudapi.net";
@@ -35,7 +30,13 @@ public class Config {
     @Primary
     @Bean("mainDataSource")
     public DataSource mainDataSource() {
-         String envSample = environment.getProperty("environment.username");
+         
+        String serverName = environment.getProperty("environment.servername");
+        String port = environment.getProperty("environment.dbport");
+        String databaseName = environment.getProperty("environment.dbname");
+        String userName = environment.getProperty("environment.username");
+        String password = environment.getProperty("environment.password");
+        String envSample = environment.getProperty("environment.username");
         log.info("********************************* logging env var from yml");
         log.info(envSample);
         log.info("********************************* Creating mainDataSource");
