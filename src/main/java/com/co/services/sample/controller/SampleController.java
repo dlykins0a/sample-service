@@ -9,16 +9,17 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.core.env.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @RestController
 public class SampleController {
-     @Autowired
-    private Environment environment;
   
+     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private final Logger log = LoggerFactory.getLogger(SampleController.class);
     MathContext m = new MathContext(5);
     
@@ -26,83 +27,58 @@ public class SampleController {
         return new BigDecimal(val).round(m);
     }
     
-    @GetMapping("/")
-    public String sampleApi() {
-        String envSample = environment.getProperty("environment.username");
-        log.info("********************************* logging env var from yml");
-        log.info(envSample);
-        Map<Integer, ArrayList<BigDecimal>> sqlResults = new HashMap<Integer, ArrayList<BigDecimal>>();
+     public String listSample() {
+		String sql = "SELECT * FROM REV_LINE_ITEM";
+		List<Map<String, Object>> sqlResults = jdbcTemplate.queryForList(sql);
+		Map<Integer, ArrayList<BigDecimal>> results = new HashMap<Integer, ArrayList<BigDecimal>>();
+		
+		Integer i = 1;
+		for(Map<String, Object> o : sqlResults) {
+			results.put(i++,  new ArrayList<BigDecimal>(Arrays.asList(
+				initValue((Double)o.get("P1")),
+				initValue((Double)o.get("P2")),
+				initValue((Double)o.get("P3")),
+				initValue((Double)o.get("P4")),
+				initValue((Double)o.get("P5")),
+				initValue((Double)o.get("P6")),
+				initValue((Double)o.get("P7")),
+				initValue((Double)o.get("P8")),
+				initValue((Double)o.get("P9")),
+				initValue((Double)o.get("P10"))
+        	)));
+  		}
 
-        sqlResults.put(1,  new ArrayList<BigDecimal>(Arrays.asList(
-            initValue(1.0),
-            initValue(2.0),
-            initValue(3.0),
-            initValue(4.0),
-            initValue(4.0),
-            initValue(3.0),
-            initValue(6.0),
-            initValue(8.0),
-            initValue(9.0),
-            initValue(20.0)
-        )));
+		// map each period year to the sum of its list of amounts
+		Map<Integer, BigDecimal> totals = new HashMap<>();
 
-        sqlResults.put(2,  new ArrayList<BigDecimal>(Arrays.asList(
-            initValue(5.0),
-            initValue(3.0),
-            initValue(5.0),
-            initValue(9.0),
-            initValue(3.0),
-            initValue(0.25),
-            initValue(4.0),
-            initValue(8.5),
-            initValue(9.7),
-            initValue(2.2)
-        )));
+		// sum the values
+		for(Integer k : results.keySet()) {
+			BigDecimal sum = BigDecimal.ZERO;
+			for(BigDecimal d : results.get(k)) {
+				sum = sum.add(d);
+			}
+			totals.put(k, sum.round(m));
+		}
+		String output = "";
+		String lineBreak = "<br>";
+		output += "Sample Recalc 7.3" + lineBreak + lineBreak;
+		output += "Input" + lineBreak;
 
-        sqlResults.put(3,  new ArrayList<BigDecimal>(Arrays.asList(
-            initValue(5.1),
-            initValue(3.2),
-            initValue(5.3),
-            initValue(9.45),
-            initValue(3.6),
-            initValue(0.45),
-            initValue(4.3),
-            initValue(2.5),
-            initValue(1.7),
-            initValue(1.2)
-        )));
+		for(Integer k : totals.keySet()) {
+			output += "Period Id = " + k.toString() + lineBreak;
+			for(BigDecimal d : results.get(k)) {
+				output += "Esn Revenue = " + d.toString() + lineBreak;
+			}
+		}
 
-        // map each period year to the sum of its list of amounts
-        Map<Integer, BigDecimal> totals = new HashMap<>();
+		output += lineBreak + "Output" + lineBreak;
 
-        // sum the values
-        for(Integer k : sqlResults.keySet()) {
-            BigDecimal sum = BigDecimal.ZERO;
-            for(BigDecimal d : sqlResults.get(k)) {
-                sum = sum.add(d);
-            }
-            totals.put(k, sum.round(m));
-        }
-        String output = "";
-        String lineBreak = "<br>";
-        output += "Sample Recalc 7.3" + lineBreak + lineBreak;
-        output += "Input" + lineBreak;
+		for(Integer k : totals.keySet()) {
+			output += "Period Id = " + k.toString();
+			output += ", Esn Summed Revenue = " + totals.get(k).toString() + lineBreak;
+		}
 
-        for(Integer k : totals.keySet()) {
-            output += "Period Id = " + k.toString() + lineBreak;
-            for(BigDecimal d : sqlResults.get(k)) {
-                output += "Esn Revenue = " + d.toString() + lineBreak;
-            }
-        }
-
-        output += lineBreak + "Output" + lineBreak;
-
-        for(Integer k : totals.keySet()) {
-            output += "Period Id = " + k.toString();
-            output += ", Esn Summed Revenue = " + totals.get(k).toString() + lineBreak;
-        }
-
-        return output;
-    }
+		return output;
+	}
     
 }
